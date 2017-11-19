@@ -1,0 +1,23 @@
+{
+  "name": "webpageproject",
+  "version": "1.0.0",
+  "description": "MEAN Stack Web Page",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarrenFitz/Web_Project.git"
+  },
+  "author": "Darren Fitzpatrick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DarrenFitz/Web_Project/issues"
+  },
+  "homepage": "https://github.com/DarrenFitz/Web_Project#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mongoose": "^4.13.4"
+  }
+}

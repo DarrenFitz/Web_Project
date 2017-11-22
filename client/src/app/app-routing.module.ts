@@ -2,13 +2,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { RegisterComponent } from './components/register/register.component';
 
 const appRoutes: Routes = [
   { path: '',
-    component: HomeComponent
+    component: HomeComponent //Default Home Route
   },
   { path: 'dashboard',
-    component: DashboardComponent,
+    component: DashboardComponent, //Dashboard Route
+  },
+  { path: 'register',
+    component: RegisterComponent, //Register Route
   },
   { path: '**', component: HomeComponent } //must be last or will conflict with routes
                                            //any other path after localhost:4200/ will be redirected to home

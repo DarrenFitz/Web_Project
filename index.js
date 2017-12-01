@@ -7,6 +7,7 @@ const config = require('./config/database');
 const path = require('path');
 const authentication = require('./routes/authentication')(router);
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 // ====  Database Connection ===
 mongoose.Promise = global.Promise;
@@ -19,6 +20,7 @@ mongoose.connect(config.uri, { useMongoClient: true }, (err) => {
 });
 
 // ====  Middleware ===
+app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());// parse application/json
 app.use(express.static(__dirname + '/client/dist/')); //static directory for frontend

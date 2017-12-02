@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-//import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -13,10 +13,16 @@ export class RegisterComponent implements OnInit {
   form: FormGroup;
   message;
   messageClass;
+  processingInfo = false;
+  emailValid;
+  emailMessage;
+  usernameValid;
+  usernameMessage;
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.createForm()
   }
@@ -46,6 +52,22 @@ export class RegisterComponent implements OnInit {
       confirm: ['',Validators.required]
     },{validator: this.matchingPasswords('password', 'confirm')});
   }
+
+  // Function to disable the registration form
+disableForm() {
+  this.form.controls['email'].disable();
+  this.form.controls['username'].disable();
+  this.form.controls['password'].disable();
+  this.form.controls['confirm'].disable();
+}
+
+// Function to enable the registration form
+enableForm() {
+  this.form.controls['email'].enable();
+  this.form.controls['username'].enable();
+  this.form.controls['password'].enable();
+  this.form.controls['confirm'].enable();
+}
 
   validateEmail(controls){
     const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -86,8 +108,8 @@ export class RegisterComponent implements OnInit {
   }
 
   onRegisterSubmit(){
-    //this.processing = true; // Used to notify HTML that form is in processing, so that it can be disabled
-    //this.disableForm(); // Disable the form
+    this.processingInfo = true; // Used to notify HTML that form is in processing, so that it can be disabled
+    this.disableForm(); // Disable the form
     // Create user object form user's inputs
     const user = {
       email: this.form.get('email').value, // E-mail input field
@@ -99,13 +121,45 @@ export class RegisterComponent implements OnInit {
     if (!data.success) {
       this.messageClass = 'alert alert-danger';
       this.message = data.message;
+      this.processingInfo = false;
+      this.enableForm();
     }else{
       this.messageClass = 'alert alert-success';
       this.message = data.message;
-    }
+      setTimeout(() => {
+          this.router.navigate(['/home']); // Go to login page
+        }, 1500);
+      }
     });
-
   }
+
+// Used to check availability of email
+  checkEmail() {
+  this.authService.checkEmail(this.form.get('email').value).subscribe(data => {
+    if (!data.success) {
+      this.emailValid = false;
+      this.emailMessage = data.message;
+    } else {
+      this.emailValid = true;
+      this.emailMessage = data.message;
+    }
+  });
+}
+
+// Used to check availability of username
+checkUsername() {
+  this.authService.checkUsername(this.form.get('username').value).subscribe(data => {
+    // Check if success true or success false was returned from API
+    if (!data.success) {
+      this.usernameValid = false; // Return username as invalid
+      this.usernameMessage = data.message; // Return error message
+    } else {
+      this.usernameValid = true; // Return username as valid
+      this.usernameMessage = data.message; // Return success message
+    }
+  });
+}
+
 
   ngOnInit() {
   }

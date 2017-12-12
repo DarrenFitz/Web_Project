@@ -90,6 +90,20 @@ router.get('/checkUsername/:username', (req, res) => {
   }
 });
 
+router.post('/login', (req, res) => {
+    // Check if username was provided
+    if (!req.body.username) {
+      res.json({ success: false, message: 'No username was provided' }); // Return error
+    } else {
+      // Check if password was provided
+      if (!req.body.password) {
+        res.json({ success: false, message: 'No password was provided.' }); // Return error
+      } else {
+        res.send('test');
+        }
+      }
+    });
+    
     return router;
 
 }

@@ -110,7 +110,8 @@ router.post('/login', (req, res) => {
               if (!validPassword) {
                 res.json({ success: false, message: 'Password invalid' });
               } else {
-                res.json({ success: true, message: 'Success!',});
+                const token = jwt.sign({ userId: user._id }, config.secret, { expiresIn: '24h' });
+                res.json({ success: true, message: 'Success!', token: token,user: { username: user.username} });
                 }
               }
             }

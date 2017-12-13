@@ -132,7 +132,7 @@ userSchema.pre('save', function(next) {
 
 //function to compare password entered to password in database.
 //return true or false
-userSchema.methods.comparePassword = (password) => {
+userSchema.methods.comparePassword = function(password){
   return bcrypt.compareSync(password, this.password);
 };
 

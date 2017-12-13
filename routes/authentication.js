@@ -1,4 +1,6 @@
-const User = require('../models/user')
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const config = require('../config/database');
 
 module.exports = (router) => {
 
@@ -91,19 +93,32 @@ router.get('/checkUsername/:username', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    // Check if username was provided
     if (!req.body.username) {
-      res.json({ success: false, message: 'No username was provided' }); // Return error
+      res.json({ success: false, message: 'No username was provided' });
     } else {
-      // Check if password was provided
       if (!req.body.password) {
-        res.json({ success: false, message: 'No password was provided.' }); // Return error
+        res.json({ success: false, message: 'No password was provided.' });
       } else {
-        res.send('test');
+        User.findOne({ username: req.body.username.toLowerCase() }, (err, user) => {
+          if (err) {
+            res.json({ success: false, message: err });
+          } else {
+            if (!user) {
+              res.json({ success: false, message: 'Username not found.' });
+            }else{
+              const validPassword = user.comparePassword(req.body.password);
+              if (!validPassword) {
+                res.json({ success: false, message: 'Password invalid' });
+              } else {
+                res.json({ success: true, message: 'Success!',});
+                }
+              }
+            }
+          });
         }
       }
     });
-    
+
     return router;
 
 }

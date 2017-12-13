@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
 
   constructor(
-    private fromBuilder: FormBuilder
+    private formBuilder: FormBuilder
   ) {
     this.createForm();
    }
@@ -37,12 +37,13 @@ export class LoginComponent implements OnInit {
   }
 
   onLoginSubmit() {
-  this.processing = true;
+  this.processingInfo = true;
   this.disableForm();
 
-  const user = {
-    username: this.form.get('username').value,
-    password: this.form.get('password').value
+    const user = {
+      username: this.form.get('username').value,
+      password: this.form.get('password').value
+      }
   }
 
   ngOnInit() {

@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config/database');
@@ -46,7 +47,7 @@ module.exports = (router) => {
                 }
               }
             }else{
-              res.json({success:true, message: 'User saved!'})
+              res.json({success:true, message: 'User saved!'});
             }
           });
         }
@@ -74,7 +75,7 @@ module.exports = (router) => {
   });
 
 
-router.get('/checkUsername/:username', (req, res) => {
+  router.get('/checkUsername/:username', (req, res) => {
   if (!req.params.username) {
     res.json({ success: false, message: 'Username was not provided' });
   } else {
@@ -92,7 +93,8 @@ router.get('/checkUsername/:username', (req, res) => {
   }
 });
 
-router.post('/login', (req, res) => {
+
+  router.post('/login', (req, res) => {
     if (!req.body.username) {
       res.json({ success: false, message: 'No username was provided' });
     } else {
@@ -120,6 +122,24 @@ router.post('/login', (req, res) => {
       }
     });
 
-    return router;
+  router.use((req, res, next) => {
+    const token = req.headers['authorization'];
+    if (!token) {
+      res.json({sucess: false, message: 'no token provided'});
+    }else{
+      jwt.verify(token, config.secret, (err, decoded) => {
+        if (err) {
+          res.json({sucess: false, message: 'token invalid' + err});
+        }else{
+          req.decoded = decoded;
+        }
+      });
+    }
+  });
 
+  router.get('/profile', (req, res) => {
+    res.send(req.decoded);
+  });
+
+  return router; //retun to index.js
 }

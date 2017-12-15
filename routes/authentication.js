@@ -132,14 +132,25 @@ module.exports = (router) => {
           res.json({sucess: false, message: 'token invalid' + err});
         }else{
           req.decoded = decoded;
+          next();
         }
       });
     }
   });
 
   router.get('/profile', (req, res) => {
-    res.send(req.decoded);
+    //res.send(req.decoded); //test purposes
+    User.findOne({_id: req.decoded.userId}).select('username email').exec((err, user) => {
+      if(err){
+        res.json({sucess: false, message: err});
+      }else{
+        if(!user){
+          res.json({sucess: false, message: 'user not found'});
+        }else{
+          res.json({sucess: true, user: user});
+        }
+      }
+    });
   });
-
   return router; //retun to index.js
 }

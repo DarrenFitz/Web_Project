@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
-
+import { tokenNotExpired } from 'angular2-jwt';
 
 
 @Injectable()
@@ -50,6 +50,12 @@ loadToken() {
     return this.http.post(this.domain + '/authentication/login', user).map(res => res.json());
   }
 
+  logout() {
+    this.authToken = null;
+    this.user = null;
+    localStorage.clear();
+  }
+
   // Function to store user's data in client local storage
   storeUserData(token, user) {
     localStorage.setItem('token', token); // Set token in local storage
@@ -61,6 +67,10 @@ loadToken() {
   getProfile(){
     this.createAuthenticationHeaders();
     return this.http.get(this.domain + '/authentication/profile', this.options).map(res => res.json());
+  }
+
+  loggedIn() {
+    return tokenNotExpired();
   }
 
 }

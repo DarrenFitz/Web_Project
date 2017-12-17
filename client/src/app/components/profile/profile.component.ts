@@ -8,15 +8,17 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ProfileComponent implements OnInit {
 
-  user;
+  username = '';
+  email = '';
 
   constructor(
     private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.authService.getProfile().subscribe(profile => {
-    this.user = profile.user;
+      this.authService.getProfile().subscribe(profile => {
+        this.username = profile.user.username; // Set username
+        this.email = profile.user.email
     });
   }
 

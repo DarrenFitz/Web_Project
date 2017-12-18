@@ -5,22 +5,28 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { AuthGuard } from './guards/auth.guard';
+import { NotAuthGuard } from './guards/notAuth.guard';
 
 const appRoutes: Routes = [
   { path: '',
     component: HomeComponent //Default Home Route
   },
   { path: 'dashboard',
-    component: DashboardComponent //Dashboard Route
+    component: DashboardComponent, //Dashboard Route
+    canActivate: [AuthGuard]
   },
   { path: 'register',
-    component: RegisterComponent //Register Route
+    component: RegisterComponent, //Register Route
+    canActivate: [NotAuthGuard]
   },
   { path: 'login',
-    component: LoginComponent //Login Route
+    component: LoginComponent, //Login Route
+    canActivate: [NotAuthGuard]
   },
   { path: 'profile',
-    component: ProfileComponent //Profile Route
+    component: ProfileComponent, //Profile Route
+    canActivate: [AuthGuard]
   },
   { path: '**', component: HomeComponent } //must be last or will conflict with routes
                                            //any other path after localhost:4200/ will be redirected to home

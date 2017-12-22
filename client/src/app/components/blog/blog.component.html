@@ -1,0 +1,74 @@
+<h1 class="page-header">Blog</h1>
+
+<!-- <div class="row show-hide-message">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
+</div> -->
+
+<button type="button" name="button" class="btn btn-warning" *ngIf="!newPost" (click)="newBlogForm()">New Post</button>
+<button [disabled]="loadingBlogs" type="button" name="button" class="btn btn-default" *ngIf="!newPost" (click)="reloadBlogs()"><span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;Reload</button>
+
+<br />
+<br />
+
+<div *ngIf="!newPost">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Title</h3>
+    </div>
+    <div class="panel-body">
+      Behaviour we improving at something to. Evil true high lady roof men had open. To projection considered it precaution an melancholy or. Wound young you thing worse along being ham. Dissimilar of favourable solicitude if sympathize middletons at. Forfeited up if disposing perfectly in an eagerness perceived necessary. Belonging sir curiosity discovery extremity yet forfeited prevailed own off. Travelling by introduced of mr terminated. Knew as miss my high hope quit. In curiosity shameless dependent knowledge up.
+    </div>
+    <!-- Start of Footer -->
+    <div class="panel-footer">
+      <strong>Posted by: </strong>ME
+      <br />
+      <strong>Date: </strong>Today
+      <br />
+      <div>
+        <strong>Likes: </strong>23
+        <br />
+        <strong>Dislikes: </strong>5
+      </div>
+      <a href="#"><button type="button" name="button" class="btn btn-sm btn-info">Edit</button></a>
+      <a href="#"><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
+
+      <!-- Likes Dropdown List -->
+      <div class="dropdown">
+        <button type="button" name="button" class="btn btn-sm btn-success">
+          <span class="glyphicon glyphicon-thumbs-up">&nbsp;</span>Likes:2</button>
+        <div class="dropdown-content">
+          <a href="#">daz</a>
+          <a href="#">vet</a>
+          <a href="#">mel</a>
+        </div>
+      </div>
+
+      <!-- Dislikes Dropdown List -->
+      <div class="dropdown">
+        <button type="button" name="button" class="btn btn-sm btn-warning">
+          <span class="glyphicon glyphicon-thumbs-up">&nbsp;</span>Likes:2</button>
+        <div class="dropdown-content">
+          <a href="#">daz</a>
+          <a href="#">vet</a>
+          <a href="#">mel</a>
+        </div>
+      </div>
+
+    </div>
+    <!-- Footer End -->
+
+    <ul class="list-group">
+      <li class="list-group-item">
+        <button type="button" name="button" class="btn btn-sm btn-danger" (click)="draftComment()">Post comment</button>
+        <br />
+        <!-- <form>
+          <textarea name="comment" cols="30" rows="10" class="form-control"></textarea>
+          <button type="button" name="button" class="btn btn-sm btn-info">Submit</button>
+          <button type="button" name="button" class="btn btn-sm btn-danger">Cancel</button>
+        </form> -->
+      </li>
+    </ul>
+
+</div>

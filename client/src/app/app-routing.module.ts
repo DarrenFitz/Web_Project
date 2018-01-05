@@ -30,8 +30,8 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   { path: 'blog',
-    component: BlogComponent, //Profile Route
-    //canActivate: [AuthGuard]
+    component: BlogComponent, //BLog Route
+    canActivate: [AuthGuard]
   },
   { path: '**', component: HomeComponent } //must be last or will conflict with routes
                                            //any other path after localhost:4200/ will be redirected to home

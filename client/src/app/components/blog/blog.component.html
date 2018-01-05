@@ -49,32 +49,34 @@
  <!-- Submit Button -->
  <button [disabled]="processingInfo || !form.valid" type="submit" name="button" class="btn btn-success">Submit</button>
 
+</form>
 
+<!-- Start of Panel blog -->
 <div *ngIf="!newPost">
-  <div class="panel panel-primary">
+  <div class="panel panel-primary" *ngFor="let blog of blogPosts">
     <div class="panel-heading">
-      <h3 class="panel-title">Title</h3>
+      <h3 class="panel-title">{{blog.title}}</h3>
     </div>
     <div class="panel-body">
-      Behaviour we improving at something to. Evil true high lady roof men had open. To projection considered it precaution an melancholy or. Wound young you thing worse along being ham. Dissimilar of favourable solicitude if sympathize middletons at. Forfeited up if disposing perfectly in an eagerness perceived necessary. Belonging sir curiosity discovery extremity yet forfeited prevailed own off. Travelling by introduced of mr terminated. Knew as miss my high hope quit. In curiosity shameless dependent knowledge up.
+      {{blog.body}}
     </div>
     <!-- Start of Footer -->
     <div class="panel-footer">
-      <strong>Posted by: </strong>ME
+      <strong>Posted by: </strong>{{blog.createdBy}}
       <br />
-      <strong>Date: </strong>Today
+      <strong>Date: </strong>{{blog.createdAt | date:'MMM dd, yyyy'}}
       <br />
-      <div>
-        <strong>Likes: </strong>23
+      <div *ngIf="username === blog.createdBy">
+        <strong>Likes: </strong>{{blog.likes}}
         <br />
-        <strong>Dislikes: </strong>5
+        <strong>Dislikes: </strong>{{blog.dislikes}}
       </div>
-      <a href="#"><button type="button" name="button" class="btn btn-sm btn-info">Edit</button></a>
-      <a href="#"><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
+      <a [routerLink]="['/edit-blog', blog.id]" *ngIf="username === blog.createdBy"><button type="button" name="button" class="btn btn-sm btn-info">Edit</button></a>
+      <a [routerLink]="['/delete-blog', blog.id]" *ngIf="username === blog.createdBy"><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
 
       <!-- Likes Dropdown List -->
       <div class="dropdown">
-        <button type="button" name="button" class="btn btn-sm btn-success">
+        <button type="button" name="button" class="btn btn-sm btn-success" *ngIf="username !== blog.createdBy">
           <span class="glyphicon glyphicon-thumbs-up">&nbsp;</span>Likes:2</button>
         <div class="dropdown-content">
           <a href="#">daz</a>
@@ -85,7 +87,7 @@
 
       <!-- Dislikes Dropdown List -->
       <div class="dropdown">
-        <button type="button" name="button" class="btn btn-sm btn-warning">
+        <button type="button" name="button" class="btn btn-sm btn-warning" *ngIf="username !== blog.createdBy">
           <span class="glyphicon glyphicon-thumbs-up">&nbsp;</span>Likes:2</button>
         <div class="dropdown-content">
           <a href="#">daz</a>

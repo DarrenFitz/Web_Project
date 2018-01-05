@@ -17,6 +17,7 @@ export class BlogComponent implements OnInit {
   form;
   processingInfo = false;
   username;
+  blogPosts;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,7 +71,7 @@ disableFormNewBlogForm() {
 
   reloadBlogs() {
     this.loadingBlogs = true;
-    //Get All Blogs
+    this.getAllBlogs();
     setTimeout(() => {
       this.loadingBlogs = false;
     }, 4000);
@@ -81,7 +82,7 @@ disableFormNewBlogForm() {
   }
 
   onBlogSubmit(){
-    console.log('from submitted');
+    //console.log('from submitted');
 
     this.processingInfo = true;
     this.disableFormNewBlogForm();
@@ -102,6 +103,7 @@ disableFormNewBlogForm() {
       } else {
         this.messageClass = 'alert alert-success';
         this.message = data.message;
+        this.getAllBlogs();
         // Clear form data after two seconds
         setTimeout(() => {
           this.newPost = false;
@@ -118,10 +120,18 @@ disableFormNewBlogForm() {
     window.location.reload();
   }
 
+  getAllBlogs() {
+    this.blogService.getAllBlogs().subscribe(data => {
+    this.blogPosts = data.blogs;
+    })
+  }
+
   ngOnInit() {
     this.authService.getProfile().subscribe(profile => {
       this.username = profile.user.username; // Used when creating new blog posts and comments
     });
+
+    this.getAllBlogs();
   }
 
 }

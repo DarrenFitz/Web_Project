@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<form (click)="updateBlogSubmit()">
+<form (submit)="updateBlogSubmit()" *ngIf="!loading">
 
   <div class="form-group">
     <label for="title">Title</label>

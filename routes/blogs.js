@@ -67,7 +67,11 @@ module.exports = (router) => {
         }
       }
     }).sort({ '_id': -1 }); //order by newest first
-  })
+  });
+
+  router.get('/singleBlog/:id', (req, res) => {
+    res.send('test');
+  });
 
   return router;
 };

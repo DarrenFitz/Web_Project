@@ -156,7 +156,7 @@ module.exports = (router) => {
      }
   });
 
-  router.put('/deleteBlog', (req, res) => {
+  router.delete('/deleteBlog/:id', (req, res) => {
     if (!req.params.id) {
       res.json({ success: false, message: 'No id provided' }); // Return error message
     } else {

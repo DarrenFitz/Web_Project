@@ -18,10 +18,10 @@
       <p>Are you sure you would like to delete this blog?</p>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer [disabled]="processingInfo"-->
     <div class="modal-footer">
-      <button [disabled]="processing" type="button" name="button" class="btn btn-success" (click)="deleteBlog()">Yes</button>
-      <a routerLink="/blog"><button [disabled]="processing" type="button" name="button" class="btn btn-danger">No</button></a>
+      <button type="button" name="button" class="btn btn-success" (click)="deleteBlog()">Yes</button>
+      <a routerLink="/blog"><button type="button" name="button" class="btn btn-danger">No</button></a>
     </div>
   </div>
 

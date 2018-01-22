@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BlogService} from '../../../services/blog.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-delete-blog',
@@ -17,11 +17,24 @@ export class DeleteBlogComponent implements OnInit {
 
   constructor(
     private blogService: BlogService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) { }
 
-  deleteBlog(){
-
+  deleteBlog() {
+    this.processingInfo = true;
+    this.blogService.deleteBlog(this.currentUrl.id).subscribe(data => {
+      if (!data.success) {
+        this.messageClass = 'alert alert-danger';
+        this.message = data.message;
+      }else{
+        this.messageClass = 'alert alert-success';
+        this.message = data.message;
+        setTimeout(() => {
+          this.router.navigate(['/blog']);
+        }, 1500);
+      }
+    });
   }
 
   ngOnInit() {

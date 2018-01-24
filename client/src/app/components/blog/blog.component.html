@@ -76,8 +76,8 @@
 
       <!-- Likes Dropdown List -->
       <div class="dropdown">
-        <button type="button" name="button" class="btn btn-sm btn-success" *ngIf="username !== blog.createdBy">
-          <span class="glyphicon glyphicon-thumbs-up">&nbsp;</span>Likes:2</button>
+        <button type="button" name="button" class="btn btn-sm btn-success" *ngIf="username !== blog.createdBy" (click)="likeBlog(blog._id)">
+          <span class="glyphicon glyphicon-thumbs-up">&nbsp;</span>Likes: {{ blog.likes }}</button>
         <div class="dropdown-content">
           <a href="#">daz</a>
           <a href="#">vet</a>
@@ -87,8 +87,8 @@
 
       <!-- Dislikes Dropdown List -->
       <div class="dropdown">
-        <button type="button" name="button" class="btn btn-sm btn-warning" *ngIf="username !== blog.createdBy">
-          <span class="glyphicon glyphicon-thumbs-up">&nbsp;</span>Likes:2</button>
+        <button type="button" name="button" class="btn btn-sm btn-warning" *ngIf="username !== blog.createdBy" (click)="dislikeBlog(blog._id)">
+          <span class="glyphicon glyphicon-thumbs-up">&nbsp;</span>Dislikes: {{ blog.dislikes }} </button>
         <div class="dropdown-content">
           <a href="#">daz</a>
           <a href="#">vet</a>

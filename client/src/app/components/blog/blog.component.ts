@@ -122,8 +122,20 @@ disableFormNewBlogForm() {
 
   getAllBlogs() {
     this.blogService.getAllBlogs().subscribe(data => {
-    this.blogPosts = data.blogs;
-    })
+    this.blogPosts = data.blogs; //Assign array to use in html
+  });
+  }
+
+  likeBlog(id) {
+    this.blogService.likeBlog(id).subscribe(data => {
+      this.getAllBlogs(); // Refresh blogs after like
+    });
+  }
+
+  dislikeBlog(id) {
+    this.blogService.dislikeBlog(id).subscribe(data => {
+      this.getAllBlogs(); // Refresh blogs after dislike
+    });
   }
 
   ngOnInit() {

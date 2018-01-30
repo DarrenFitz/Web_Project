@@ -70,10 +70,9 @@ module.exports = (router) => {
   });
 
   router.get('/singleBlog/:id', (req, res) => {
-
-            if (!req.params.id) {
-              res.json({ success: false, message: 'No blog id provided' }); // Return error message
-            }else{
+          if (!req.params.id) {
+            res.json({ success: false, message: 'No blog id provided' }); // Return error message
+          }else{
               Blog.findOne({ _id: req.params.id }, (err, blog) => {
                 if (err) {
                   res.json({ success: false, message: 'blog id is not valid' });
@@ -202,145 +201,145 @@ module.exports = (router) => {
   });
 
   router.put('/likeBlog', (req, res) => {
-  // Check if id was passed provided in request body
-  if (!req.body.id) {
-    res.json({ success: false, message: 'No id was provided.' });
-  } else {
-    // Search the database with id
-    Blog.findOne({ _id: req.body.id }, (err, blog) => {
-      if (err) {
-        res.json({ success: false, message: 'Invalid blog id' });
-      } else {
-        // Check if id matched the id of a blog post in the database
-        if (!blog) {
-          res.json({ success: false, message: 'Error, blog not found.' });
+    // Check if id was passed provided in request body
+    if (!req.body.id) {
+      res.json({ success: false, message: 'No id was provided.' }); // Return error message
+    } else {
+      // Search the database with id
+      Blog.findOne({ _id: req.body.id }, (err, blog) => {
+        // Check if error was encountered
+        if (err) {
+          res.json({ success: false, message: 'Invalid blog id' }); // Return error message
         } else {
-          // Get logged in user data
-          User.findOne({ _id: req.decoded.userId }, (err, user) => {
-            if (err) {
-              res.json({ success: false, message: 'Error, data not found.' });
-            } else {
-              // check user is in database
-              if (!user) {
-                res.json({ success: false, message: 'Error, user not found.' });
+          // Check if id matched the id of a blog post in the database
+          if (!blog) {
+            res.json({ success: false, message: 'That blog was not found.' }); // Return error message
+          } else {
+            // Get data from user that is signed in
+            User.findOne({ _id: req.decoded.userId }, (err, user) => {
+              // Check if error was found
+              if (err) {
+                res.json({ success: false, message: 'Something went wrong.' }); // Return error message
               } else {
-                // Check if user is same as person that created blog
-                if (user.username === blog.createdBy) {
-                  res.json({ success: false, message: 'Dont be conceited!' });
+                // Check if id of user in session was found in the database
+                if (!user) {
+                  res.json({ success: false, message: 'Could not authenticate user.' }); // Return error message
                 } else {
-                  // check if user liked the post before
-                  if (blog.likedBy.includes(user.username)) {
-                    res.json({ success: false, message: 'You already liked this post.' });
+                  // Check if user who liked post is the same user that originally created the blog post
+                  if (user.username === blog.createdBy) {
+                    res.json({ success: false, message: 'Cannot like your own post.' }); // Return error message
                   } else {
-                    // Check if user that like had dislike post previously
-                    if (blog.dislikedBy.includes(user.username)) {
-                      blog.dislikes--; // Increment dislikes by -1
-                      const arrayIndex = blog.dislikedBy.indexOf(user.username); // Get the index of the username in the array for removal
-                      blog.dislikedBy.splice(arrayIndex, 1); // Remove user from array
-                      blog.likes++; // Increment likes by 1
-                      blog.likedBy.push(user.username); // Add user to like list/array
-                      // Save blog
-                      blog.save((err) => {
-                        if (err) {
-                          res.json({ success: false, message: 'Something went wrong.' });
-                        } else {
-                          res.json({ success: true, message: 'Blog liked!' }); // Return success message
-                        }
-                      });
+                    // Check if the user who liked the post has already liked the blog post before
+                    if (blog.likedBy.includes(user.username)) {
+                      res.json({ success: false, message: 'You already liked this post.' }); // Return error message
                     } else {
-                      blog.likes++; // Incriment likes by 1
-                      blog.likedBy.push(user.username); // Add user to Liked list/array
-                      // Save blog post
-                      blog.save((err) => {
-                        if (err) {
-                          res.json({ success: false, message: 'Something went wrong.' });
-                        } else {
-                          res.json({ success: true, message: 'Blog liked!' }); // Return success message
-                        }
-                      });
+                      // Check if user who liked post has previously disliked a post
+                      if (blog.dislikedBy.includes(user.username)) {
+                        blog.dislikes--; // Reduce the total number of dislikes
+                        const arrayIndex = blog.dislikedBy.indexOf(user.username); // Get the index of the username in the array for removal
+                        blog.dislikedBy.splice(arrayIndex, 1); // Remove user from array
+                        blog.likes++; // Increment likes
+                        blog.likedBy.push(user.username); // Add username to the array of likedBy array
+                        // Save blog post data
+                        blog.save((err) => {
+                          // Check if error was found
+                          if (err) {
+                            res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+                          } else {
+                            res.json({ success: true, message: 'Blog liked!' }); // Return success message
+                          }
+                        });
+                      } else {
+                        blog.likes++; // Incriment likes
+                        blog.likedBy.push(user.username); // Add liker's username into array of likedBy
+                        // Save blog post
+                        blog.save((err) => {
+                          if (err) {
+                            res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+                          } else {
+                            res.json({ success: true, message: 'Blog liked!' }); // Return success message
+                          }
+                        });
+                      }
                     }
                   }
                 }
               }
-            }
-          });
+            });
+          }
         }
-      }
-    });
-  }
-});
+      });
+    }
+  });
 
-/* ===============================================================
-   DISLIKE BLOG POST
-=============================================================== */
-router.put('/dislikeBlog', (req, res) => {
-  // Check if id was provided inside the request body
-  if (!req.body.id) {
-    res.json({ success: false, message: 'No id was provided.' });
-  } else {
-    // Search database id of user
-    Blog.findOne({ _id: req.body.id }, (err, blog) => {
-      if (err) {
-        res.json({ success: false, message: 'Invalid blog id' });
-      } else {
-        // Check if blog post id was found in the database
-        if (!blog) {
-          res.json({ success: false, message: 'Error, blog not found.' });
+  router.put('/dislikeBlog', (req, res) => {
+    // Check if id was provided inside the request body
+    if (!req.body.id) {
+      res.json({ success: false, message: 'No id was provided.' });
+    } else {
+      // Search database id of user
+      Blog.findOne({ _id: req.body.id }, (err, blog) => {
+        if (err) {
+          res.json({ success: false, message: 'Invalid blog id' });
         } else {
-          // Get logged in users data
-          User.findOne({ _id: req.decoded.userId }, (err, user) => {
-            if (err) {
-              res.json({ success: false, message: 'Error, user data not found.' });
-            } else {
-              // Check if user was found in the database
-              if (!user) {
-                res.json({ success: false, message: 'Error, user not found.' });
+          // Check if blog post id was found in the database
+          if (!blog) {
+            res.json({ success: false, message: 'Error, blog not found.' });
+          } else {
+            // Get logged in users data
+            User.findOne({ _id: req.decoded.userId }, (err, user) => {
+              if (err) {
+                res.json({ success: false, message: 'Error, user data not found.' });
               } else {
-                // Check if user who disliekd post is the same person who originated the blog post
-                if (user.username === blog.createdBy) {
-                  res.json({ success: false, messagse: 'Cannot dislike your own post.' });
+                // Check if user was found in the database
+                if (!user) {
+                  res.json({ success: false, message: 'Error, user not found.' });
                 } else {
-                  // Check if user disliked before
-                  if (blog.dislikedBy.includes(user.username)) {
-                    res.json({ success: false, message: 'You already disliked this post.' });
+                  // Check if user who disliekd post is the same person who originated the blog post
+                  if (user.username === blog.createdBy) {
+                    res.json({ success: false, messagse: 'Cannot dislike your own post.' });
                   } else {
                     // Check if user disliked before
-                    if (blog.likedBy.includes(user.username)) {
-                      blog.likes--; // Decrease likes by one
-                      const arrayIndex = blog.likedBy.indexOf(user.username); // Check where username is inside of the array
-                      blog.likedBy.splice(arrayIndex, 1); // Remove username from index
-                      blog.dislikes++; // Increment by 1
-                      blog.dislikedBy.push(user.username); // Add username to list of dislikers
-                      // Save blog data
-                      blog.save((err) => {
-                        if (err) {
-                          res.json({ success: false, message: 'Error, dislike not registered' });
-                        } else {
-                          res.json({ success: true, message: 'Blog disliked!' }); // success
-                        }
-                      });
+                    if (blog.dislikedBy.includes(user.username)) {
+                      res.json({ success: false, message: 'You already disliked this post.' });
                     } else {
-                      blog.dislikes++; // Increment by 1
-                      blog.dislikedBy.push(user.username); // Add user to list of likers
-                      // Save blog data
-                      blog.save((err) => {
-                        if (err) {
-                          res.json({ success: false, message: 'Error, dislike not registered' });
-                        } else {
-                          res.json({ success: true, message: 'Blog disliked!' }); // Return success message
-                        }
-                      });
+                      // Check if user disliked before
+                      if (blog.likedBy.includes(user.username)) {
+                        blog.likes--; // Decrease likes by one
+                        const arrayIndex = blog.likedBy.indexOf(user.username); // Check where username is inside of the array
+                        blog.likedBy.splice(arrayIndex, 1); // Remove username from index
+                        blog.dislikes++; // Increment by 1
+                        blog.dislikedBy.push(user.username); // Add username to list of dislikers
+                        // Save blog data
+                        blog.save((err) => {
+                          if (err) {
+                            res.json({ success: false, message: 'Error, dislike not registered' });
+                          } else {
+                            res.json({ success: true, message: 'Blog disliked!' }); // success
+                          }
+                        });
+                      } else {
+                        blog.dislikes++; // Increment by 1
+                        blog.dislikedBy.push(user.username); // Add user to list of likers
+                        // Save blog data
+                        blog.save((err) => {
+                          if (err) {
+                            res.json({ success: false, message: 'Error, dislike not registered' });
+                          } else {
+                            res.json({ success: true, message: 'Blog disliked!' }); // Return success message
+                          }
+                        });
+                      }
                     }
                   }
                 }
               }
-            }
-          });
+            });
+          }
         }
-      }
-    });
-  }
-});
+      });
+    }
+  });
 
   return router;
 };

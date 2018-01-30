@@ -125,11 +125,11 @@ module.exports = (router) => {
   router.use((req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) {
-      res.json({sucess: false, message: 'no token provided'});
+      res.json({success: false, message: 'no token provided'});
     }else{
       jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
-          res.json({sucess: false, message: 'token invalid' + err});
+          res.json({success: false, message: 'token invalid' + err});
         }else{
           req.decoded = decoded;
           next();
@@ -142,15 +142,34 @@ module.exports = (router) => {
     //res.send(req.decoded); //test purposes
     User.findOne({_id: req.decoded.userId}).select('username email').exec((err, user) => {
       if(err){
-        res.json({sucess: false, message: err});
+        res.json({success: false, message: err});
       }else{
         if(!user){
-          res.json({sucess: false, message: 'user not found'});
+          res.json({success: false, message: 'user not found'});
         }else{
-          res.json({sucess: true, user: user});
+          res.json({success: true, user: user});
         }
       }
     });
   });
+
+  router.get('/publicProfile/:username', (req, res) => {
+    if (!req.params.username){
+      res.json({success: false, message: 'No username provided'});
+    }else{
+      User.findOne({ username: req.params.username}).select('username email').exec((err, user) => {
+        if(err){
+          res.json({success: false, message: 'Error cant find profile'});
+        }else{
+          if(!user){
+            res.json({success: false, message: 'username not found'});
+          }else{
+            res.json({success: true, user: user});
+          }
+        }
+      });
+    }
+  });
+
   return router; //retun to index.js
 }

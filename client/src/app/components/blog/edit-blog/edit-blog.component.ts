@@ -52,7 +52,7 @@ export class EditBlogComponent implements OnInit {
       // Check if GET request was success or not
       if (!data.success) {
         this.messageClass = 'alert alert-danger'; // Bootstrap error
-        this.message = 'Blog not found.'; // Error message
+        this.message = data.message;
       } else {
         this.blog = data.blog; // Save blog object for use in HTML
         this.loading = false; // Allow loading of blog form

@@ -341,5 +341,55 @@ module.exports = (router) => {
     }
   });
 
+  router.post('/comment', (req, res) => {
+    // Check if comment was provided in request body
+    if (!req.body.comment) {
+      res.json({ success: false, message: 'There was no comment provided' });
+    } else {
+      // Check if id was provided in request body
+      if (!req.body.id) {
+        res.json({ success: false, message: 'Id not provided' });
+      } else {
+        // id used to search for blog in db
+        Blog.findOne({ _id: req.body.id }, (err, blog) => {
+          if (err) {
+            res.json({ success: false, message: 'incorrect blog id' });
+          } else {
+            // check id matched a blog post
+            if (!blog) {
+              res.json({ success: false, message: 'error blog not found' });
+            } else {
+              // get data of logged in user
+              User.findOne({ _id: req.decoded.userId }, (err, user) => {
+                if (err) {
+                  res.json({ success: false, message: 'Error cant get user data' });
+                } else {
+                  // ensure user is in found in db
+                  if (!user) {
+                    res.json({ success: false, message: 'Cannot find user' });
+                  } else {
+                    // Add the new comment to the blog post's array
+                    blog.comments.push({
+                      comment: req.body.comment, // Comment field
+                      commentator: user.username // commenter
+                    });
+                    // Save
+                    blog.save((err) => {
+                      if (err) {
+                        res.json({ success: false, message: 'Could not save!' });
+                      } else {
+                        res.json({ success: true, message: 'Comment saved' });
+                      }
+                    });
+                  }
+                }
+              });
+            }
+          }
+        });
+      }
+    }
+  });
+
   return router;
 };

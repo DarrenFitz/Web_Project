@@ -62,7 +62,7 @@ let commentLengthChecker = (comment) => {
   if (!comment[0]) {
     return false;
   } else {
-    if (comment[0].length < 3 || comment[0].length > 150) {
+    if (comment[0].length < 1 || comment[0].length > 200) {
       return false;
     } else {
       return true;
@@ -73,7 +73,7 @@ let commentLengthChecker = (comment) => {
 const commentValidators = [
   {
     validator: commentLengthChecker,
-    message: 'Comments must be between 3 and 150 characters'
+    message: 'Comments must be between 1 and 200 characters'
   },
 ];
 

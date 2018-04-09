@@ -100,6 +100,7 @@ disableFormNewBlogForm() {
   }
 
   draftComment(id) {
+    this.commentForm.reset();
     this.newComment = []; //ensure array is empty
     this.newComment.push(id);
   }

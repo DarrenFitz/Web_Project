@@ -103,26 +103,22 @@
           <br />
           <div *ngIf="newComment.indexOf(blog._id) > -1">
 
-            <!-- Form: Comment Form Start -->
             <form [formGroup]="commentForm">
-              <!-- Textarea Input -->
+              <!-- Textarea -->
               <textarea name="comment" rows="10" cols="30" class="form-control" formControlName="comment"></textarea>
-              <!-- Validation -->
+              <!-- Validation for comment -->
               <div [ngClass]="{'has-success': !commentForm.controls.comment.errors && commentForm.controls.comment.dirty, 'has-error': commentForm.controls.comment.dirty && commentForm.controls.comment.errors}">
                 <ul class="help-block">
                   <li *ngIf="commentForm.controls.comment.errors?.required && commentForm.controls.comment.dirty">This field is required.</li>
                   <li *ngIf="(commentForm.controls.comment.errors?.maxlength && commentForm.controls.comment.dirty) ||(commentForm.controls.comment.errors?.minlength && commentForm.controls.comment.dirty)">Comment must be at least 1 character but no more than 200.</li>
                 </ul>
               </div>
-              <!-- Post Button -->
               <button [disabled]="!commentForm.valid || processingInfo" type="submit" name="button" class="btn btn-sm btn-info" (click)="postComment(blog._id)">Post</button>
-              <!-- Cancel Button -->
               <button [disabled]="processingInfo" type="button" name="button" class="btn btn-sm btn-danger" (click)="cancelSubmit(blog._id)">Cancel</button>
             </form>
-            <!-- Form: Comment Form End -->
           </div>
 
-          <!-- Show Comments -->
+          <!-- Display Comments -->
           <li *ngIf="enabledComments.indexOf(blog._id) === -1 && blog.comments.length > 0" class="list-group-item">
             <span (click)="expand(blog._id)">
               Show comments&nbsp;&nbsp;
@@ -138,7 +134,7 @@
             </span>
           </li>
 
-          <!-- Comment -->
+          <!-- Comments -->
           <div *ngIf="enabledComments.indexOf(blog._id) > -1">
             <li *ngFor="let comment of blog.comments" class="list-group-item">
               <strong>{{ comment.commentator }}:</strong> {{ comment.comment }}

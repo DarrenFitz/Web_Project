@@ -9,7 +9,7 @@ A working example can be found [here](https://mighty-island-46941.herokuapp.com/
 This applications demonstrates how to setup a RESTful API using NodeJS with Angular 2 Frontend. The application features a blog feed, where users interact with by posting comments, liking posts, disliking posts, and creating/editing/deleting their own blog posts.
 
 ## Architecture
-
+![picture](https://github.com/DarrenFitz/Web_Project/blob/master/arc.png)
 ## Requirements
 
 - NodeJS
